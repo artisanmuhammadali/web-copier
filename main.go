@@ -12,10 +12,12 @@ import (
 func main() {
 	fmt.Println("Website Copier Starts...")
 
-	// dir := inputProjectName()
-	url := inputUrl()
+	dir := inputProjectName()
 
-	// fmt.Print(newFilePath)
+	err := os.Mkdir(dir, 0755)
+	handleErr(err)
+
+	url := inputUrl()
 
 	res, err := http.Get(url)
 	handleErr(err)
@@ -24,21 +26,24 @@ func main() {
 	body, err := io.ReadAll(res.Body)
 	handleErr(err)
 
-	file := os.WriteFile("index.html", body, 0644)
+	path := dir + "/index.html"
+	file := os.WriteFile(path, body, 0644)
 	handleErr(file)
 	fmt.Println("Website Copy successfully...")
 }
 
-// func inputProjectName() string {
-// 	fmt.Println("Enter Project Name :")
+func inputProjectName() string {
+	fmt.Println("Enter Project Name :")
 
-// 	reader := bufio.NewReader(os.Stdin)
+	reader := bufio.NewReader(os.Stdin)
 
-//	name, err := reader.ReadString('\n')
-//	handleErr(err)
-//	return name
-//
-// // }
+	name, err := reader.ReadString('\n')
+	handleErr(err)
+	name = strings.TrimSpace(name)
+
+	return name
+
+}
 func inputUrl() string {
 	fmt.Println("Enter Website Url :")
 
